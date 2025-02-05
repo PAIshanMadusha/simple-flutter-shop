@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_flutter_shop/data/product_data.dart';
 import 'package:simple_flutter_shop/models/product_model.dart';
 import 'package:simple_flutter_shop/pages/cart_page.dart';
 import 'package:simple_flutter_shop/pages/favorite_page.dart';
+import 'package:simple_flutter_shop/providers/cart_provider.dart';
 import 'package:simple_flutter_shop/utils/app_colors.dart';
 import 'package:simple_flutter_shop/utils/app_constants.dart';
 import 'package:simple_flutter_shop/utils/app_text_style.dart';
@@ -95,48 +97,59 @@ class ProductPage extends StatelessWidget {
                         offset: Offset(1, 1),
                       ),
                     ]),
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      SizedBox(
-                        width: 180,
-                        child: Text(
-                          product.title,
-                          style: AppTextStyle.kProductTitle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                child: Consumer(
+                  builder: (BuildContext context, CartProvider cardProvider,
+                      Widget? child) {
+                    return ListTile(
+                      title: Row(
+                        children: [
+                          SizedBox(
+                            width: 180,
+                            child: Text(
+                              product.title,
+                              style: AppTextStyle.kProductTitle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            "0",
+                            style: AppTextStyle.kProductPrice,
+                          ),
+                        ],
                       ),
-                      Text(
-                        "0",
+                      subtitle: Text(
+                        "LKR.${product.price.toStringAsFixed(2)}",
                         style: AppTextStyle.kProductPrice,
                       ),
-                    ],
-                  ),
-                  subtitle: Text(
-                    "LKR.${product.price.toStringAsFixed(2)}",
-                    style: AppTextStyle.kProductPrice,
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.add_shopping_cart_rounded,
-                          size: 26,
-                          color: AppColors.kProductTitleColor,
-                        ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              CartProvider().addItem(
+                                product.id,
+                                product.price,
+                                product.title,
+                              );
+                            },
+                            icon: Icon(
+                              Icons.add_shopping_cart_rounded,
+                              size: 26,
+                              color: AppColors.kProductTitleColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.favorite_border_outlined,
+                              size: 26,
+                              color: AppColors.kFavoriteIconColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border_outlined,
-                          size: 26,
-                          color: AppColors.kFavoriteIconColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             );
