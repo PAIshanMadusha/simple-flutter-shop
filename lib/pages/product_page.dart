@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_flutter_shop/data/product_data.dart';
+import 'package:simple_flutter_shop/helpers/app_helper.dart';
 import 'package:simple_flutter_shop/models/product_model.dart';
 import 'package:simple_flutter_shop/pages/cart_page.dart';
 import 'package:simple_flutter_shop/pages/favorite_page.dart';
@@ -33,8 +34,16 @@ class ProductPage extends StatelessWidget {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Icon(
+            Icons.shopify_sharp,
+            color: AppColors.kCardColor1,
+            size: 50,
+          ),
+          SizedBox(
+            width: AppConstants.kSizedBoxValue - 10,
+          ),
           FloatingActionButton(
-            backgroundColor: AppColors.kCardColor2,
+            backgroundColor: AppColors.kCardColor1,
             heroTag: "fav_page",
             onPressed: () {
               Navigator.push(
@@ -54,7 +63,7 @@ class ProductPage extends StatelessWidget {
             width: AppConstants.kSizedBoxValue,
           ),
           FloatingActionButton(
-            backgroundColor: AppColors.kCardColor2,
+            backgroundColor: AppColors.kCardColor1,
             heroTag: "cart_page",
             onPressed: () {
               Navigator.push(
@@ -76,7 +85,7 @@ class ProductPage extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: AppConstants.kDefualtPadding,
           right: AppConstants.kDefualtPadding,
-          bottom: AppConstants.kDefualtPadding,
+          bottom: AppConstants.kDefualtPadding * 7.5,
         ),
         child: ListView.builder(
           itemCount: products.length,
@@ -97,8 +106,8 @@ class ProductPage extends StatelessWidget {
                         offset: Offset(1, 1),
                       ),
                     ]),
-                child: Consumer(
-                  builder: (BuildContext context, CartProvider cardProvider,
+                child: Consumer<CartProvider>(
+                  builder: (BuildContext context, CartProvider cartProvider,
                       Widget? child) {
                     return ListTile(
                       title: Row(
@@ -112,8 +121,13 @@ class ProductPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "0",
-                            style: AppTextStyle.kProductPrice,
+                            cartProvider.items.containsKey(product.id)
+                                ? cartProvider.items[product.id]!.quantity
+                                    .toString()
+                                : "0",
+                            style: AppTextStyle.kProductPrice.copyWith(
+                              fontSize: 20,
+                            ),
                           ),
                         ],
                       ),
@@ -126,17 +140,25 @@ class ProductPage extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () {
-                              CartProvider().addItem(
+                              cartProvider.addItem(
                                 product.id,
                                 product.price,
                                 product.title,
                               );
+                              AppHelper.showSnackBar(
+                                  context, "Item Added to Cart Successfully!");
                             },
-                            icon: Icon(
-                              Icons.add_shopping_cart_rounded,
-                              size: 26,
-                              color: AppColors.kProductTitleColor,
-                            ),
+                            icon: cartProvider.items.containsKey(product.id)
+                                ? Icon(
+                                    Icons.shopping_cart_rounded,
+                                    size: 26,
+                                    color: AppColors.kFavoriteIconColor,
+                                  )
+                                : Icon(
+                                    Icons.add_shopping_cart_rounded,
+                                    size: 26,
+                                    color: AppColors.kProductTitleColor,
+                                  ),
                           ),
                           IconButton(
                             onPressed: () {},

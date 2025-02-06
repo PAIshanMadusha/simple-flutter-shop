@@ -9,6 +9,9 @@ class AppColors {
   static const Color kCardColor1 = Color.fromARGB(255, 173, 255, 97);
   static const Color kCardColor2 = Color.fromARGB(255, 204, 255, 253);
 
+  static const Color kCartCardColor1 = Color.fromARGB(255, 255, 231, 16);
+  static const Color kCartCardColor2 = Color.fromARGB(255, 254, 255, 222);
+
   static const Gradient kCardColor = LinearGradient(
     colors: [
       kCardColor1,
@@ -16,5 +19,14 @@ class AppColors {
     ],
     begin: Alignment.centerRight,
     end: Alignment.centerLeft,
+  );
+
+  static const Gradient kCartCardColor = LinearGradient(
+    colors: [
+      kCartCardColor1,
+      kCartCardColor2,
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomLeft,
   );
 }
