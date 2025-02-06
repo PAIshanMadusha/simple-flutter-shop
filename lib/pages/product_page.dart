@@ -6,6 +6,7 @@ import 'package:simple_flutter_shop/models/product_model.dart';
 import 'package:simple_flutter_shop/pages/cart_page.dart';
 import 'package:simple_flutter_shop/pages/favorite_page.dart';
 import 'package:simple_flutter_shop/providers/cart_provider.dart';
+import 'package:simple_flutter_shop/providers/favorite_provider.dart';
 import 'package:simple_flutter_shop/utils/app_colors.dart';
 import 'package:simple_flutter_shop/utils/app_constants.dart';
 import 'package:simple_flutter_shop/utils/app_text_style.dart';
@@ -106,9 +107,9 @@ class ProductPage extends StatelessWidget {
                         offset: Offset(1, 1),
                       ),
                     ]),
-                child: Consumer<CartProvider>(
+                child: Consumer2<CartProvider, FavoriteProvider>(
                   builder: (BuildContext context, CartProvider cartProvider,
-                      Widget? child) {
+                      FavoriteProvider favoriteProvider, Widget? child) {
                     return ListTile(
                       title: Row(
                         children: [
@@ -161,9 +162,18 @@ class ProductPage extends StatelessWidget {
                                   ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              favoriteProvider.toggleFavorite(product.id);
+                              AppHelper.showSnackBar(
+                                  context,
+                                  favoriteProvider.isFavorite(product.id)
+                                      ? "Item Added Successfully!"
+                                      : "Item Removed Successfully!");
+                            },
                             icon: Icon(
-                              Icons.favorite_border_outlined,
+                              favoriteProvider.isFavorite(product.id)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
                               size: 26,
                               color: AppColors.kFavoriteIconColor,
                             ),
